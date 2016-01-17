@@ -11,6 +11,7 @@
 #include <time.h>
 #include "binarynode.h"
 #include "binarysearchtree.h"
+#include "avltree.h"
 #include <stdlib.h>
 
 
@@ -102,12 +103,61 @@ void binarySearchTreeTest ()
 	std::cout << "Number found = " << found << std::endl;
 }
 
+void avlTreeTest ()
+{
+	srand (time(NULL));
+
+	int insertCount = rand() % 100;
+	avltree<int>* output = 0;
+	std::vector<int> storage;
+	for(int i=0; i < insertCount; ++i)
+	{
+		int value = rand() % 10000;
+		if(0 == output) {
+			output = new avltree<int>(value);
+		}
+		else
+		{
+			binarynode<int>* updatedOutput = output->insert(value);
+			output = reinterpret_cast<avltree<int>*>(updatedOutput);
+		}
+		storage.push_back(value);
+	}
+	int found = 0;
+	for(std::vector<int>::iterator itr = storage.begin(); itr < storage.end(); ++itr)
+	{
+		binarynode<int>* aNode = output->findNodeByValue(*itr);
+		if(0 != aNode && aNode->getValue() != *itr)
+		{
+			std::cout << "Find failure for " << *itr << std::endl;
+		}
+		else
+		{
+			found += 1;
+		}
+		if(0 == aNode)
+		{
+			std::cout << "No node found" << std::endl;
+		}
+	}
+	std::cout << "Height = " << output->getHeight() << std::endl;
+	std::cout << "Height Left = " << output->getLeft()->getHeight() << std::endl;
+	std::cout << "Height Right= " << output->getRight()->getHeight() << std::endl;
+
+
+	std::cout << "Insert count = " << insertCount << std::endl;
+	std::cout << "Number found = " << found << std::endl;
+}
+
+
 int main()
 {
 	std::cout << "Binary Tree" << std::endl;
 	binaryTreeTest();
 	std::cout << "Binary Search Tree" << std::endl;
 	binarySearchTreeTest();
+	std::cout << "AVL Tree" << std::endl;
+	avlTreeTest();
 	return 0;
 }
 

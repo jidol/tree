@@ -9,9 +9,11 @@ class binarysearchtree : public binarynode<T>
 {
 public:
 	binarysearchtree(T value);
+	virtual ~binarysearchtree();
 
-	binarynode<T>* insert(T value);
+	virtual binarynode<T>* insert(T value);
 	binarynode<T>* findNodeByValue(T value);
+	virtual binarynode<T>* createElement(T value);
 
 
 protected:
@@ -24,13 +26,23 @@ binarysearchtree<T>::binarysearchtree(T value): binarynode<T>(value)
 {
 }
 
+template <class T>
+binarysearchtree<T>::~binarysearchtree()
+{
+	binarynode<T>::~binarynode();
+}
+
+template <class T>
+binarynode<T>* binarysearchtree<T>::createElement(T value)
+{ return new binarysearchtree(value); }
+
 
 template <class T>
 binarysearchtree<T>* binarysearchtree<T>::insertLeft(T value)
 {
 	if(0 == this->myLeft)
 	{
-		this->myLeft = new binarysearchtree<T>(value);
+		this->myLeft = createElement(value);
 	}
 	else
 	{
@@ -45,7 +57,7 @@ binarysearchtree<T>* binarysearchtree<T>::insertRight(T value)
 {
 	if(0 == this->myRight)
 	{
-		this->myRight = new binarysearchtree<T>(value);
+		this->myRight = createElement(value);
 	}
 	else
 	{
@@ -59,11 +71,7 @@ binarysearchtree<T>* binarysearchtree<T>::insertRight(T value)
 template <class T>
 binarynode<T>* binarysearchtree<T>::insert(T value)
 {
-	if(this->myValue == value)
-	{
-		return this;
-	}
-	else if(this->myValue < value)
+    if(this->myValue < value)
 	{
 		return insertRight(value);
 	}
@@ -71,7 +79,7 @@ binarynode<T>* binarysearchtree<T>::insert(T value)
 	{
 		return insertLeft(value);
 	}
-	return 0;
+	return this;
 }
 
 template <class T>
